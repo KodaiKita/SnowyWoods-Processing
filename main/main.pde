@@ -1,24 +1,55 @@
 import java.util.ArrayList;
 import java.util.List;
-FallingObject test;
-Snow test2;
+import java.util.Comparator;
+
 float windForceX = random(-1, 1);
 List<Snow> Snows = new ArrayList<Snow>();
+List<Tree> Trees = new ArrayList<Tree>();
+PGraphics backgroundLayer;
+Tree test2;
 int frame = 0;
 
 void setup() {
   size(1280, 720);
-  test2 = new Snow(200, 100);
+  
+  frameRate(30);
+  
+  backgroundLayer = createGraphics(width, height);
+  for(int i=0; i < 10; i++){
+    float Length = random(80, 200);
+    int posX = (int)random(0, width);
+    float opacity = (float)(Length-80)/(float)(200-80)*128.0+128.0;
+    println(Length+ " added");
+    println(opacity+ " op");
+    Trees.add(new Tree((int)Length, posX, (int)opacity, backgroundLayer));
+  }
+  Trees.sort(Comparator.comparingInt(tree -> tree.length));
+  
+  
+  backgroundLayer.beginDraw();
+  for (Tree t: Trees) {
+    t.drawTree();
+  }
+  backgroundLayer.endDraw();
 }
 void draw() {
   int repeatCnt = 1;
-  int frameInterval = 1;
+  int frameInterval = 3;
   if (frame%frameInterval == 0) {
     for (int i=0; i < repeatCnt; i++) {
       generateSnow();
     }
   }
-  background(255);
+  color c1 = color(232, 244, 252);
+  color c2 = color(225, 227, 249);
+  for (int y = 0; y < height; y++) {
+    float t = map(y, 0, height, 0, 1);
+    color c = lerpColor(c1, c2, t);
+    stroke(c);
+    line(0, y, width, y);
+  }
+  
+  image(backgroundLayer, 0, 0);
 
   for (int i=0; i < Snows.size(); i++) {
     Snows.get(i).loop();
