@@ -19,8 +19,7 @@ void setup() {
     float Length = random(80, 200);
     int posX = (int)random(0, width);
     float opacity = (float)(Length-80)/(float)(200-80)*128.0+128.0;
-    println(Length+ " added");
-    println(opacity+ " op");
+
     Trees.add(new Tree((int)Length, posX, (int)opacity, backgroundLayer));
   }
   Trees.sort(Comparator.comparingInt(tree -> tree.length));
